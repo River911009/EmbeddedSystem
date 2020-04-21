@@ -1,31 +1,46 @@
 #include "config.h"
 
-byte direct=0b00010000;
+int __speed = 100;
 
+int latchPin = 12;
+int clockPin = 4;
+int dataPin = 8;
 void setup() {
-  // pin initial
-  for(int i=3;i<=12;i++) pinMode(i,OUTPUT);
+  pinMode(latchPin, OUTPUT);
+  pinMode(clockPin, OUTPUT);
+  pinMode(dataPin, OUTPUT);
+  pinMode(7,OUTPUT);
 
-  // 74595 commanding
-  digitalWrite(DIR_EN,LOW);
-  for(int i=0;i<8;i++){
-    digitalWrite(DIR_SER,((direct & 1)==1)? HIGH:LOW);
-    delayMicroseconds(1);
-    digitalWrite(DIR_CLK,LOW);
-    delayMicroseconds(1);
-    digitalWrite(DIR_CLK,HIGH);
-    delayMicroseconds(1);
-    direct = direct >> 1;
+
+  pinMode(3,OUTPUT);
+  pinMode(5,OUTPUT);
+  pinMode(6,OUTPUT);
+  pinMode(9,OUTPUT);
+  pinMode(10,OUTPUT);
+  pinMode(11,OUTPUT);
+  
+}
+void loop() {     
+    byte direct = 0b00101110;     // Qa~h  backward
+
+    __speed = 50;     // set speed to 20%
+
+
+    digitalWrite(7,LOW);
+  for (int led = 0; led < 8; led++) {
+    digitalWrite(latchPin, LOW);
+    shiftOut(dataPin, clockPin, LSBFIRST, direct); 
+    digitalWrite(latchPin, HIGH);
+    delay(40);
   }
-  digitalWrite(DIR_LATCH,LOW);
-  delayMicroseconds(1);
-  digitalWrite(DIR_LATCH,HIGH);
-  delayMicroseconds(1);
-  digitalWrite(DIR_EN,HIGH);
 
-  test=5;
+  analogWrite(3, map(__speed, 0, 100, 0, 255) );
+  analogWrite(5, map(__speed, 0, 100, 0, 255) );
+  analogWrite(6, map(__speed, 0, 100, 0, 255) );
+  analogWrite(9, map(__speed, 0, 100, 0, 255) );
+  analogWrite(10, map(__speed, 0, 100, 0, 255) );
+  analogWrite(11, map(__speed, 0, 100, 0, 255) );
+  
+  delay(2000);
 }
 
-void loop() {
-
-}
