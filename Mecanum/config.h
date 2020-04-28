@@ -2,18 +2,28 @@
 #define __CONFIG_H__
 
 // wheel pinName    pin
-#define  DIR_EN     12
-#define  DIR_SER    11
-#define  DIR_LATCH  10
-#define  DIR_CLK    9
-#define  PWM0A      8
-#define  PWM0B      7
-#define  PWM2A      6
-#define  PWM2B      5
-#define  PWM1A      4
-#define  PWM1B      3
+#define  DIR_LATCH   12
+#define  PWM2A       11
+#define  PWM1B       10
+#define  PWM1A        9
+#define  DIR_SER      8
+#define  DIR_EN       7
+#define  PWM0A        6
+#define  PWM0B        5
+#define  DIR_CLK      4
+#define  PWM2B        3
 
-int test;
+//setup wheelways
+#define  Forward         0b11010001
+#define  Backward        0b00101110
+#define  Right           0b00011011
+#define  Left            0b11100100
+#define  LeftForward     0b11000000
+#define  RightForward    0b00010001
+#define  LeftBackward    0b00100100
+#define  RightBackward   0b00001010
+#define  Clockwisespin               0b01010110
+#define  Counterclockwisespin        0b10101001
+
 
 #endif
-

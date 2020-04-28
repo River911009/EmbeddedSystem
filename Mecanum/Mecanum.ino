@@ -1,46 +1,88 @@
+#include <SoftwareSerial.h>
 #include "config.h"
+//#define _DEBUG
 
-int __speed = 100;
+#define __SPEED__ 80
 
-int latchPin = 12;
-int clockPin = 4;
-int dataPin = 8;
-void setup() {
-  pinMode(latchPin, OUTPUT);
-  pinMode(clockPin, OUTPUT);
-  pinMode(dataPin, OUTPUT);
-  pinMode(7,OUTPUT);
+void setMove(byte direct, byte __speed){
+//    byte direct = Right;     // Qa~h  backward
 
+//    __speed = 80;     // set speed to 80%
 
-  pinMode(3,OUTPUT);
-  pinMode(5,OUTPUT);
-  pinMode(6,OUTPUT);
-  pinMode(9,OUTPUT);
-  pinMode(10,OUTPUT);
-  pinMode(11,OUTPUT);
-  
-}
-void loop() {     
-    byte direct = 0b00101110;     // Qa~h  backward
-
-    __speed = 50;     // set speed to 20%
-
-
-    digitalWrite(7,LOW);
+  digitalWrite(DIR_EN,LOW);
   for (int led = 0; led < 8; led++) {
-    digitalWrite(latchPin, LOW);
-    shiftOut(dataPin, clockPin, LSBFIRST, direct); 
-    digitalWrite(latchPin, HIGH);
+    digitalWrite(DIR_LATCH, LOW);
+    shiftOut(DIR_SER, DIR_CLK, LSBFIRST, direct); 
+    digitalWrite(DIR_LATCH, HIGH);
     delay(40);
   }
 
-  analogWrite(3, map(__speed, 0, 100, 0, 255) );
-  analogWrite(5, map(__speed, 0, 100, 0, 255) );
-  analogWrite(6, map(__speed, 0, 100, 0, 255) );
-  analogWrite(9, map(__speed, 0, 100, 0, 255) );
-  analogWrite(10, map(__speed, 0, 100, 0, 255) );
-  analogWrite(11, map(__speed, 0, 100, 0, 255) );
+  analogWrite(PWM2B, map(__speed, 0, 100, 0, 255) );
+  analogWrite(PWM0B, map(__speed, 0, 100, 0, 255) );
+  analogWrite(PWM0A, map(__speed, 0, 100, 0, 255) );
+//  analogWrite(PWM1A, map(__speed, 0, 100, 0, 255) );
+//  analogWrite(PWM1B, map(__speed, 0, 100, 0, 255) );
+  analogWrite(PWM2A, map(__speed, 0, 100, 0, 255) );
+}
+
+void motorInitial(void){
+  pinMode(DIR_LATCH, OUTPUT);
+  pinMode(DIR_CLK, OUTPUT);
+  pinMode(DIR_SER, OUTPUT);
+  pinMode(DIR_EN,OUTPUT);
   
-  delay(2000);
+  pinMode(PWM2B,OUTPUT);
+  pinMode(PWM0B,OUTPUT);
+  pinMode(PWM0A,OUTPUT);
+//  pinMode(PWM1A,OUTPUT);
+//  pinMode(PWM1B,OUTPUT);
+  pinMode(PWM2A,OUTPUT);
+}
+
+SoftwareSerial BT04(9, 10);
+byte command;
+
+void setup() {  
+  motorInitial();
+  BT04.begin(9600);
+#ifdef _DEBUG
+  Serial.begin(9600);
+#endif
+}
+void loop() {     
+  if(BT04.available()){
+    command=BT04.read();
+#ifdef _DEBUG
+    Serial.println(command);
+#endif
+    switch(command){
+      case 49:
+        setMove(Forward, __SPEED__); break;
+      case 50:
+        setMove(Backward, __SPEED__); break;
+      case 51:
+        setMove(Right, __SPEED__); break;
+      case 52:
+        setMove(Left, __SPEED__); break;
+      case 53:
+        setMove(LeftForward, __SPEED__); break;
+      case 54:
+        setMove(RightForward, __SPEED__); break;
+      case 55:
+        setMove(RightBackward, __SPEED__); break;
+      case 56:
+        setMove(LeftBackward, __SPEED__); break;
+      case 57:
+        setMove(Clockwisespin, __SPEED__); break;
+      case 58:
+        setMove(Counterclockwisespin, __SPEED__); break;
+        
+      default:break;
+    }
+    
+  }
+  delay(1000);
+  setMove(0, 0);
+  command=0;
 }
 
