@@ -1,6 +1,6 @@
 #include <SoftwareSerial.h>
 #include "config.h"
-#define __SPEED__ 100
+#define __SPEED__ 60
 #define __time__ 1000
 void setMove(byte direct, byte __speed){
 //    byte direct = Right;     // Qa~h  backward
@@ -18,8 +18,6 @@ void setMove(byte direct, byte __speed){
   analogWrite(PWM2B, map(__speed, 0, 100, 0, 255) );
   analogWrite(PWM0B, map(__speed, 0, 100, 0, 255) );
   analogWrite(PWM0A, map(__speed, 0, 100, 0, 255) );
-//  analogWrite(PWM1A, map(__speed, 0, 100, 0, 255) );
-//  analogWrite(PWM1B, map(__speed, 0, 100, 0, 255) );
   analogWrite(PWM2A, map(__speed, 0, 100, 0, 255) );
 }
 
@@ -32,9 +30,11 @@ void motorInitial(void){
   pinMode(PWM2B,OUTPUT);
   pinMode(PWM0B,OUTPUT);
   pinMode(PWM0A,OUTPUT);
-//  pinMode(PWM1A,OUTPUT);
-//  pinMode(PWM1B,OUTPUT);
   pinMode(PWM2A,OUTPUT);
+  analogWrite(PWM2B,0);
+  analogWrite(PWM0B,0);
+  analogWrite(PWM0A,0);
+  analogWrite(PWM2A,0);
 }
 SoftwareSerial BT04(9,10);
 byte command=0;
@@ -46,40 +46,26 @@ void setup() {
 }
 
 void loop() {
-  if(Serial.available()){
-    BT04.write(Serial.read());
-  }
+//  if(Serial.available()){
+//    BT04.write(Serial.read());
+//  }
   
   if(BT04.available()){
     command=BT04.read();
   }
 
-      switch(command){
-      case 49:
-        setMove(Forward, __SPEED__);delay(__time__); break;
-      case 50:
-        setMove(Backward, __SPEED__);delay(__time__); break;
-      case 51:
-        setMove(Right, __SPEED__); delay(__time__);break;
-      case 52:
-        setMove(Left, __SPEED__); delay(__time__);break;
-      case 53:
-        setMove(LeftForward, __SPEED__); delay(__time__);break;
-      case 54:
-        setMove(RightForward, __SPEED__);delay(__time__); break;
-      case 55:
-        setMove(RightBackward, __SPEED__); delay(__time__);break;
-      case 56:
-        setMove(LeftBackward, __SPEED__); delay(__time__);break;
-      case 57:
-        setMove(Clockwisespin, __SPEED__);delay(__time__); break;
-      case 58:
-        setMove(Counterclockwisespin, __SPEED__);delay(__time__); break;
-        
-      default:
-      setMove(0,0);break;
-    }
-//delay(1000);
-  setMove(0, 0);
+  if (command == 'a')setMove(Forward,__SPEED__);
+  if (command == 'b')setMove(Backward,__SPEED__);
+  if (command == 'c')setMove(Right,__SPEED__);
+  if (command == 'd')setMove(Left,__SPEED__);
+  if (command == 'e')setMove(LeftForward,__SPEED__);
+  if (command == 'f')setMove(RightForward,__SPEED__);
+  if (command == 'g')setMove(RightBackward,__SPEED__);
+  if (command == 'h')setMove(LeftBackward,__SPEED__);
+  if (command == 'i')setMove(Clockwisespin,__SPEED__);
+  if (command == 'j')setMove(0,0);
+  
+
+//  setMove(0, 0);
   command=0;
 }
