@@ -1,0 +1,22 @@
+hardware connection:
+
+usable pins:
+
+GPIO00  FLASH   btn     FuncButton
+GPIO01  TXD0    ch340   USB
+GPIO02  TXD1    D4      
+GPIO03  RXD0    ch340   USB
+GPIO04  SDA     D2      
+GPIO05  SCL     D1      
+GPIO06  SD_CLK
+GPIO07  SD_D0
+GPIO08  SD_D1
+GPIO09  SD_D2
+GPIO10  SD_D3
+GPIO11  SD_CMD
+GPIO12  MISO    D6      MAX6675_DO
+GPIO13  MOSI    D7      MAX6675_CS
+GPIO14  SCK     D5      MAX6675_SCK
+GPIO15  TXD2    D8      
+GPIO16  WAKE    D0      
+
